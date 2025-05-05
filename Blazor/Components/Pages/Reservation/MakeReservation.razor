@@ -1,0 +1,83 @@
+@page "/reserve/{TableId:int}"
+@using Infrastructure.Interfaces
+@using Domain.DTOs.ReservationDTOs
+@using Domain.DTOs.CustomerDTOs
+@inject ICustomerService CustomerService
+@inject IReservationService ReservationService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<h3>Бронирование столика</h3>
+
+@if (reservationCreated)
+{
+    <p>Бронирование успешно создано!</p>
+    <button class="btn btn-primary" @onclick="GoToReservations">Перейти к бронированиям</button>
+}
+else
+{
+    <EditForm Model="reservation" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="TableId">ID столика</label>
+            <InputNumber id="TableId" class="form-control" @bind-Value="reservation.TableId" readonly />
+        </div>
+        
+        <div class="form-group">
+            <label for="CustomerId">ID клиента</label>
+            <InputNumber id="CustomerId" class="form-control" @bind-Value="reservation.CustomerId" />
+        </div>
+
+        <div class="form-group">
+            <label for="ReservationDate">Дата и время (только по часам)</label>
+            <input type="datetime-local"
+                id="ReservationDate"
+                class="form-control"
+                @bind="reservationDateString"
+                step="3600" />
+        </div>
+
+        <br />
+        <button type="submit" class="btn btn-success">Создать бронирование</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int TableId { get; set; }
+    private CreateReservationDTO reservation = new CreateReservationDTO();
+    private bool reservationCreated = false;
+
+    protected override void OnInitialized()
+    {
+        reservation.TableId = TableId;
+        reservation.ReservationDate = DateTime.Now;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var reservationResponse = await ReservationService.CreateAsync(reservation);
+        if (reservationResponse.IsSuccess)
+        {
+            reservationCreated = true;
+        }
+    }
+
+    private void GoToReservations()
+    {
+        Navigation.NavigateTo("/reservations");
+    }
+
+    private string reservationDateString
+    {
+        get => reservation.ReservationDate?.ToString("yyyy-MM-ddTHH:00") ?? string.Empty;
+        set
+        {
+            if (DateTime.TryParse(value, out var dt))
+            {
+                reservation.ReservationDate = dt;
+            }
+        }
+    }
+}

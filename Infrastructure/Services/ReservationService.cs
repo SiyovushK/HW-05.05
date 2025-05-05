@@ -14,6 +14,8 @@ public class ReservationService(DataContext context, IMapper mapper) : IReservat
 {
     public async Task<Response<GetReservationDTO>> CreateAsync(CreateReservationDTO createReservation)
     {
+        createReservation.ReservationDate = createReservation.ReservationDate.ToUniversalTime();
+
         if (await context.Reservations.AnyAsync(
             r => r.ReservationDate == createReservation.ReservationDate &&
             r.TableId == createReservation.TableId

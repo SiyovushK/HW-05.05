@@ -182,3 +182,4 @@ C:\Users\-\Desktop\HW 05.05\Blazor\obj\Debug\net9.0\refint\Blazor.dll
 C:\Users\-\Desktop\HW 05.05\Blazor\obj\Debug\net9.0\Blazor.pdb
 C:\Users\-\Desktop\HW 05.05\Blazor\obj\Debug\net9.0\Blazor.genruntimeconfig.cache
 C:\Users\-\Desktop\HW 05.05\Blazor\obj\Debug\net9.0\ref\Blazor.dll
+C:\Users\-\Desktop\HW 05.05\Blazor\obj\Debug\net9.0\Blazor.sourcelink.json
